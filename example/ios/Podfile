@@ -6,6 +6,7 @@ target 'MediaKitDemo' do
     platform :ios, :deployment_target => '9.0'
     project 'MediaKitDemo'
     pod 'Masonry','1.1.0'
+    pod 'MediaKitSrc', :path => '../../'
 end
 
 
