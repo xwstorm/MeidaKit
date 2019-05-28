@@ -1,0 +1,7 @@
+example/ios/Pods
+Podfile.lock
+example/ios/MediaKitDemo.xcodeproj/xcuserdata
+example/ios/MediaKitDemo.xcodeproj/project.xcworkspace/xcuserdata
+example/ios/MediaKitDemo.xcworkspace/xcuserdata
+example/ios/MediaTools.xcodeproj/project.xcworkspace/xcuserdata
+example/ios/MediaTools.xcodeproj/xcuserdata
