@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.author           = { 'xiewei' => 'xiew' }
   s.source           = { :git => 'https://github.com/xwstorm/MediaKit.git', :branch => 'master' }
   s.ios.deployment_target = '9.0'
-  s.source_files     =  'base/*.{h,cpp}'
+  s.source_files     =  'base/*.{h,hpp,c,cc,cpp}'
 end
