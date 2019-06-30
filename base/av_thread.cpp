@@ -29,7 +29,7 @@ bool MKThread::ProcessMessages(int cmsLoop) {
     }
     return false;
 }
-
+ 
 void MKThread::Post(const Location& posted_from,
                     MessageHandler* phandler) {
 }
