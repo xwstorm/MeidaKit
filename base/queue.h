@@ -49,6 +49,8 @@ public:
     LockQueue();
     void enqueue(T t);
     T dequeue(int milliseconds);
+    bool start();
+    void stop();
 protected:
     Locker mLocker;
 };
@@ -64,10 +66,13 @@ public:
     
     PriorityQueue();
     void enqueue(T t, Priority priority = LOW_PRIORITY);
-    T dequeue(int milliseconds);
+    T dequeue(int milliseconds = kForever);
+    bool start();
+    void stop();
 protected:
     Locker mLocker;
     MKList<T> mList;
 };
+
 
 MK_END

@@ -8,6 +8,8 @@
 #pragma once
 #include <stdio.h>
 #include <utility>
+#include "av_base.h"
+MK_BEGIN
 class ThreadMessage;
 class MessageHandler {
 public:
@@ -49,4 +51,4 @@ public:
 private:
     FunctorT mFunctor;
 };
-
+MK_END

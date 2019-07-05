@@ -4,7 +4,7 @@
 #include <memory.h>
 #include <string.h>
 
-#define mkns MK_NAME_SPACE
+#define mkns mk
 #define MK_BEGIN namespace mkns {
 #define MK_END  }
 

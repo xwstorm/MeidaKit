@@ -11,6 +11,10 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'xiewei' => 'xiew' }
   s.source           = { :git => 'https://github.com/xwstorm/MediaKit.git', :branch => 'master' }
+  s.xcconfig         = {'HEADER_SEARCH_PATHS'  => '"${PODS_ROOT}/../../../" "${PODS_ROOT}/../"'}
   s.ios.deployment_target = '9.0'
-  s.source_files     =  'base/*.{h,hpp,c,cc,cpp}'
+  s.source_files     =  [
+    'base/*.{h,hpp,c,cc,cpp}',
+    'manager/*.{h,hpp,c,cc,cpp}'
+  ]
 end

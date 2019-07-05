@@ -6,3 +6,6 @@
 //
 
 #include "thread_message.h"
+MK_BEGIN
+
+MK_END

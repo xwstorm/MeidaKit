@@ -64,7 +64,7 @@ void PriorityQueue<T>::enqueue(T t, Priority priority) {
     mLocker.lock();
     switch (priority) {
         case LOW_PRIORITY:
-            addBack(t);
+            this->addBack(t);
             break;
         case HIGHT_PRIORITY:
             mList.addBack(t);
@@ -79,8 +79,8 @@ template <typename T>
 T PriorityQueue<T>::dequeue(int milliseconds) {
     T t;
     mLocker.lock();
-    if (!mList->empty()) {
-        t = mList->popFront();
+    if (!mList.empty()) {
+        t = mList.popFront();
     } else if (this->empty()) {
         mLocker.wait();
         t = this->popFront();
@@ -91,4 +91,19 @@ T PriorityQueue<T>::dequeue(int milliseconds) {
     return t;
 }
 
+template <typename T>
+bool PriorityQueue<T>::start() {
+    return true;
+}
+template <typename T>
+void PriorityQueue<T>::stop() {
+    
+}
+
+
+
+class ThreadMessage;
+template class PriorityQueue<ThreadMessage*>;
+
+//template class MKList<ThreadMessage*>;
 MK_END

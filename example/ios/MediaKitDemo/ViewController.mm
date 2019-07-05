@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#include "manager/mediakit_manager.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    mk::MediaKitManager* manager = new mk::MediaKitManager();
+    manager->init();
 }
 
 

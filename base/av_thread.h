@@ -1,5 +1,5 @@
 //
-//  av_thread.hpp
+//  av_thread.h
 //  MediaKit
 //
 //  Created by xiewei on 2019/5/28.
@@ -19,21 +19,39 @@ MK_BEGIN
 class MKThread {
 public:
     MKThread();
+    MKThread(const char* name);
+    bool open();
+    void close();
+    bool start();
+    void stop();
+    
     bool ProcessMessages(int cms);
     
     // template
     template <class ReturnT, class FunctorT>
     ReturnT Invoke(const Location& posted_from, FunctorT&& functor) {
         FunctorMessageHandler<ReturnT, FunctorT> handler(std::forward<FunctorT>(functor));
-        InvokeInternal(posted_from, &handler);
+        Send(posted_from, handler);
         return handler.MoveResult();
     }
+    
+    template <class ReturnT, class FunctorT>
+    ReturnT AsyncInvoke(const Location& posted_from, FunctorT&& functor) {
+        FunctorMessageHandler<void, FunctorT> handler(std::forward<FunctorT>(functor));
+        Post(posted_from, handler);
+    }
+    
+    bool isCurrent();
 
 protected:
-    bool IsQuitting();
+    virtual void Run();
     
-    void InvokeInternal(const Location& posted_from,
-                        MessageHandler* handler);
+    
+    typedef ThreadMessage* ThreadMessageStruct;
+    
+    static void* PreRun(void* pv);
+    
+    bool IsQuitting();
     // post
     void Post(const Location& posted_from,
               MessageHandler* phandler);
@@ -42,11 +60,15 @@ protected:
     void Send(const Location& posted_from,
               MessageHandler* phandler);
     
-    ThreadMessage* GetMsg();
+    ThreadMessageStruct GetMsg();
     void Dispatch(ThreadMessage* msg);
     
     
 protected:
-    PriorityQueue<ThreadMessage*> mQueue;
+    typedef PriorityQueue<ThreadMessage*> ThreadQueue;
+    ThreadQueue mQueue;
+    
+    pthread_t   mThread;
+    char*       mName;
 };
 MK_END
