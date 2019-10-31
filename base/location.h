@@ -15,14 +15,15 @@
 #define CALL_FROM_HERE_WITH_CUNTION(function_name) \
 Location(function_name, __FILE__ ":" STRINGIZE(__LINE__))
 
-class Location {
+class MKLocation {
 public:
-    Location(const char* function_name, const char* file_and_line);
+    MKLocation();
+    MKLocation(const char* function_name, const char* file_and_line);
     const char* functionName() const {return mFunctionName;}
     const char* fileAndLine() const {return mFileAndLine;}
 private:
-    const char* mFunctionName;
-    const char* mFileAndLine;
+    const char* mFunctionName = nullptr;
+    const char* mFileAndLine = nullptr;
 };
 
 #endif /* Location_h */

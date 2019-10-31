@@ -30,20 +30,27 @@ MKThread::MKThread(const char* name)
 
 
 bool MKThread::open() {
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    
-    int error_code = pthread_create(&mThread, &attr, PreRun, this);
-    if (mName != nullptr) {
-//        pthread_setname_np(mThread, mName);
-        pthread_setname_np(mName);
-    }
+    mWThread = std::thread(MKThread::runProxy, this);
     return true;
 }
+#ifdef MK_WIN32
+void MKThread::setName() {
+    if (mName != nullptr) {
+    }
+}
+#else
+#include <pthread.h>
+void MKThread::setName() {
+    if (mName != nullptr) {
+        pthread_setname_np(mName);
+    }
+}
+#endif
 
 void MKThread::close() {
-    
-    pthread_join(mThread, 0);
+    if (mWThread.joinable()) {
+        mWThread.join();
+    }
 }
 
 bool MKThread::start() {
@@ -56,55 +63,44 @@ void MKThread::stop() {
 //    mQueue.stop();
 }
 
-void MKThread::Run() {
-    
-    
+void MKThread::runProxy(MKThread* thread) {
+    thread->run();
 }
 
-void* MKThread::PreRun(void* pv) {
-    MKThread* thread = static_cast<MKThread*>(pv);
-    thread->Run();
-    
-    return nullptr;
+void MKThread::run() {
+    // prerun
+    setName();
+    ProcessMessages();
+    // after run
 }
 
-template <class ReturnT, class FunctorT>
-ReturnT Invoke(const Location& posted_from, FunctorT&& functor) {
-    FunctorMessageHandler<ReturnT, FunctorT> handler(std::forward<FunctorT>(functor));
-    Send(posted_from, &handler);
-    return handler.MoveResult();
-}
 
 bool MKThread::isCurrent() {
     return false;
 }
 
-bool MKThread::ProcessMessages(int cmsLoop) {
-    while (!IsQuitting()) {
-        // get msg
-        ThreadMessageStruct msg = msg = GetMsg();
-        if(msg != nullptr) {
-            Dispatch(msg);
-        }
-    }
-    return false;
-}
- 
-void MKThread::Post(const Location& posted_from,
-                    MessageHandler* phandler) {
+void MKThread::Post(const MKLocation& posted_from,
+                    MessageHandler* phandler,
+                    int msg_tag,
+                    MessageData* data) {
     ThreadMessage* msg = new ThreadMessage();
     msg->phandler = phandler;
+    msg->msg_data = data;
     mQueue.enqueue(msg);
 }
 
-void MKThread::Send(const Location& posted_from,
-                    MessageHandler* phandler) {
+void MKThread::Send(const MKLocation& posted_from,
+                    MessageHandler* phandler,
+                    int msg_tag,
+                    MessageData* data) {
     if (IsQuitting()) {
         return;
     }
     // send message to queue
     ThreadMessage* msg = new ThreadMessage();
     msg->phandler = phandler;
+    msg->msg_data = data;
+    
     
     if (isCurrent()) {
         phandler->OnMessage(msg);
@@ -112,8 +108,25 @@ void MKThread::Send(const Location& posted_from,
     }
     mQueue.enqueue(msg, ThreadQueue::HIGHT_PRIORITY);
     // waiting
+    // phandler.wait
     
-    
+}
+
+bool MKThread::ProcessMessages() {
+    while (!IsQuitting()) {
+        // get msg
+        ThreadMessageStruct msg = GetMsg();
+        if(msg != nullptr) {
+            Dispatch(msg);
+        }
+    }
+    return false;
+}
+
+void MKThread::Dispatch(ThreadMessage* msg) {
+    if(msg->phandler) {
+        msg->phandler->OnMessage(msg);
+    }
 }
 
 bool MKThread::IsQuitting() {
@@ -123,10 +136,6 @@ bool MKThread::IsQuitting() {
 ThreadMessage* MKThread::GetMsg() {
     ThreadMessage* msg = mQueue.dequeue();
     return msg;
-}
-
-void MKThread::Dispatch(ThreadMessage* msg) {
-    msg->phandler->OnMessage(msg);
 }
 
 MK_END

@@ -11,22 +11,29 @@
 #include "av_base.h"
 MK_BEGIN
 class ThreadMessage;
+
+
+class MessageData {
+public:
+    MessageData() {}
+    virtual ~MessageData() {}
+};
+
 class MessageHandler {
 public:
     virtual ~MessageHandler();
-    virtual void OnMessage(ThreadMessage* msg) = 0;
+    virtual void OnMessage(MessageData* msg) = 0;
     
 protected:
     MessageHandler() {}
 };
-
 
 template <class ReturnT, class FunctorT>
 class FunctorMessageHandler : public MessageHandler {
 public:
     explicit FunctorMessageHandler(FunctorT&& functor)
     : mFunctor(std::forward<FunctorT>(functor)) {}
-    virtual void OnMessage(ThreadMessage* msg) {
+    virtual void OnMessage(MessageData* msg) {
         mResult = mFunctor();
     }
     ReturnT MoveResult() {
@@ -44,7 +51,9 @@ class FunctorMessageHandler<void, FunctorT> : public MessageHandler {
 public:
     explicit FunctorMessageHandler(FunctorT&& functor)
     : mFunctor(std::forward<FunctorT>(functor)) {}
-    virtual void OnMessage(ThreadMessage* msg) { mFunctor(); }
+    virtual void OnMessage(MessageData* msg) {
+        mFunctor();
+    }
     void result() const {}
     void MoveResult() {}
     

@@ -7,12 +7,15 @@
 
 #pragma once
 
-#include <stdio.h>
+#include "av_base.h"
 #include "location.h"
+#include "message_handler.h"
+#include "mk_lock.h"
 MK_BEGIN
 class MessageHandler;
-class ThreadMessage {
-public:
+class MessageData;
+
+struct ThreadMessage : public MessageData {
     enum ThreadMessageType {
         POST_MESSAGE,
         SEND_MESSAGE
@@ -20,11 +23,26 @@ public:
     ThreadMessage()
     : phandler(nullptr), message_id(0), ts_sensitive(0) {}
     
-//    Location posted_from;
+    MKLocation posted_from;
     MessageHandler* phandler;
     uint32_t message_id;
-//    MessageData* pdata;
+    MessageData* msg_data;
     int64_t ts_sensitive;
     ThreadMessageType messageType;
+    
+    virtual void wait() {};
+    virtual void signal() {};
+};
+
+struct ThreadSendMessage : public ThreadMessage {
+public:
+    void wait() override {
+        mLock.wait();
+    };
+    void signal() override {
+        mLock.notifyAll();
+    };
+private:
+    MKLock mLock;
 };
 MK_END

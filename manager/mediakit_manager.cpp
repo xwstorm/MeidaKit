@@ -15,6 +15,8 @@ int MediaKitManager::init() {
     if (mLooper == nullptr) {
         mLooper = new MKThread("looper");
     }
+    mLooper->open();
+    mLooper->start();
     return 0;
 }
 MK_END

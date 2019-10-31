@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include "mk_list.h"
+#include "mk_plock.h"
 
 MK_BEGIN
 template <typename T>
@@ -21,28 +22,6 @@ protected:
     MKList<T> mList;
 };
 
-class Locker {
-public:
-    Locker():mWaiting(0){};
-    void lock() {   pthread_mutex_lock(&mMutex);}
-    void unlock() { pthread_mutex_unlock(&mMutex);}
-    void signal() {
-        if (mWaiting) {
-            pthread_cond_signal(&mCond);
-        }
-    }
-    void wait() {
-        mWaiting++;
-        pthread_cond_wait(&mCond, &mMutex);
-        mWaiting--;
-    }
-    
-protected:
-    unsigned int mWaiting;
-    pthread_mutex_t mMutex;
-    pthread_cond_t mCond;
-};
-
 template <typename T>
 class LockQueue : public MKList<T> {
 public:
@@ -52,27 +31,10 @@ public:
     bool start();
     void stop();
 protected:
-    Locker mLocker;
+    MKPLocke mLocker;
 };
 
 
-template <typename T>
-class PriorityQueue : public MKList<T> {
-public:
-    enum Priority {
-        LOW_PRIORITY,
-        HIGHT_PRIORITY,
-    };
-    
-    PriorityQueue();
-    void enqueue(T t, Priority priority = LOW_PRIORITY);
-    T dequeue(int milliseconds = kForever);
-    bool start();
-    void stop();
-protected:
-    Locker mLocker;
-    MKList<T> mList;
-};
 
 
 MK_END

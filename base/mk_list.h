@@ -5,7 +5,7 @@
 //  Created by xiewei on 2019/6/26.
 //
 
-
+#pragma once
 
 #include <stdio.h>
 #include "av_base.h"
@@ -112,6 +112,7 @@ T MKList<T>::popFront() {
         return t;
     }
 }
+
 template <typename T>
 T MKList<T>::popBack() {
     if (mTail == nullptr) {
@@ -131,6 +132,7 @@ T MKList<T>::popBack() {
         return t;
     }
 }
+
 template <typename T>
 bool MKList<T>::empty() {
     return mSize == 0;
