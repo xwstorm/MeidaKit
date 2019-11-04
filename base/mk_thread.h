@@ -1,5 +1,5 @@
 //
-//  av_thread.h
+//  mk_thread.h
 //  MediaKit
 //
 //  Created by xiewei on 2019/5/28.
@@ -7,30 +7,19 @@
 //
 
 #pragma once
-
-#include <stdio.h>
-#include <list>
-#include "av_base.h"
-#include "location.h"
+#include <thread>
+#include <queue>
+#include "base/mk_base.h"
+#include "base/location.h"
 #include "thread_message.h"
 #include "message_handler.h"
-#include "event.h"
-#include "queue.h"
-#include "priority_queue.h"
-#include <thread>
-#include "mk_lock.h"
 
 MK_BEGIN
 class MKThread {
 public:
-    MKThread();
-    MKThread(const char* name);
+    MKThread(const char* name = nullptr);
     bool open();
     void close();
-    bool start();
-    void stop();
-    
-    bool ProcessMessages();
     
     // template
     template <class ReturnT, class FunctorT>
@@ -41,20 +30,27 @@ public:
     }
     
     template <class ReturnT, class FunctorT>
-    ReturnT AsyncInvoke(const MKLocation& posted_from, FunctorT&& functor) {
-        FunctorMessageHandler<void, FunctorT> handler(std::forward<FunctorT>(functor));
-        Post(posted_from, handler);
+    bool AsyncInvoke(const MKLocation& posted_from, FunctorT&& functor, uint32_t tag = 0) {
+        FunctorMessageHandler<void, FunctorT>* handler = new FunctorMessageHandler<void, FunctorT>(std::forward<FunctorT>(functor));
+        return Post(posted_from, handler, 0);
     }
     
-    bool isCurrent();
+    template <class ReturnT, class FunctorT>
+    bool AsyncInvokeDelay(const MKLocation& posted_from, FunctorT&& functor, int64_t millsecond, uint32_t tag = 0) {
+        FunctorMessageHandler<void, FunctorT>* handler = new FunctorMessageHandler<void, FunctorT>(std::forward<FunctorT>(functor));
+        return Post(posted_from, handler, millsecond);
+    }
+    
 
 protected:
-    typedef ThreadMessage* ThreadMessageStruct;
+    bool isCurrent();
+    bool ProcessMessages();
     
     bool IsQuitting();
     // post
-    void Post(const MKLocation& posted_from,
+    bool Post(const MKLocation& posted_from,
               MessageHandler* phandler,
+              int64_t delay,
               int msg_tag = 0,
               MessageData* data = nullptr);
     
@@ -64,20 +60,21 @@ protected:
               int msg_tag = 0,
               MessageData* data = nullptr);
     
-    ThreadMessageStruct GetMsg();
-    void Dispatch(ThreadMessage* msg);
     void setName();
 private:
     static void runProxy(MKThread* thread);
     virtual void run();
 protected:
-    typedef PriorityQueue<ThreadMessage*> ThreadQueue;
-    ThreadQueue mQueue;
-    
-    pthread_t   mThread;
     char*       mName;
+    bool        mIsQuiting;
     
     std::thread mWThread;
-    MKLock      mLock;
+    
+    // message queue
+    std::queue<ThreadSendTaskMessage*> mSendQueue1;
+    std::queue<ThreadMessage*> mPostQueue1;
+    
+    std::mutex mMsgMutex;
+    std::condition_variable mMsgCV;
 };
 MK_END

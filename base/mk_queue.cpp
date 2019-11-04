@@ -5,25 +5,10 @@
 //  Created by xiewei on 2019/6/27.
 //
 
-#include "queue.h"
+#include "mk_queue.h"
 
 
 MK_BEGIN
-
-template <typename T>
-MKQueue<T>::MKQueue() {
-    
-}
-
-template <typename T>
-void MKQueue<T>::enqueue(T t) {
-    mList.addBack(t);
-}
-
-template <typename T>
-T MKQueue<T>::dequeue() {
-    return mList.popFront();
-}
 
 //////////////////////////////////
 

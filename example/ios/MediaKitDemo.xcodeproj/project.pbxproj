@@ -13,6 +13,7 @@
 		5D31C3DF229D6FCD0051DB8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D31C3DE229D6FCD0051DB8D /* Assets.xcassets */; };
 		5D31C3E2229D6FCD0051DB8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D31C3E0229D6FCD0051DB8D /* LaunchScreen.storyboard */; };
 		5D31C3E5229D6FCD0051DB8D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D31C3E4229D6FCD0051DB8D /* main.m */; };
+		5D9F20E5236B19ED00D0C302 /* thread_test.h in Sources */ = {isa = PBXBuildFile; fileRef = 5D9F20E4236B19ED00D0C302 /* thread_test.h */; };
 		F7A825F7961B3F89AA28D0F5 /* libPods-MediaKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C96DEC0CAF95169CBEE942D6 /* libPods-MediaKitDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		5D31C3E1229D6FCD0051DB8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5D31C3E3229D6FCD0051DB8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D31C3E4229D6FCD0051DB8D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5D9F20E4236B19ED00D0C302 /* thread_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread_test.h; sourceTree = "<group>"; };
 		781978E6997A0F95D59D2164 /* Pods-MediaKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MediaKitDemo.release.xcconfig"; path = "Target Support Files/Pods-MediaKitDemo/Pods-MediaKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		C96DEC0CAF95169CBEE942D6 /* libPods-MediaKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MediaKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -83,6 +85,7 @@
 				5D31C3E0229D6FCD0051DB8D /* LaunchScreen.storyboard */,
 				5D31C3E3229D6FCD0051DB8D /* Info.plist */,
 				5D31C3E4229D6FCD0051DB8D /* main.m */,
+				5D9F20E4236B19ED00D0C302 /* thread_test.h */,
 			);
 			path = MediaKitDemo;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				5D31C3DA229D6FCC0051DB8D /* ViewController.mm in Sources */,
 				5D31C3E5229D6FCD0051DB8D /* main.m in Sources */,
 				5D31C3D7229D6FCC0051DB8D /* AppDelegate.m in Sources */,
+				5D9F20E5236B19ED00D0C302 /* thread_test.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

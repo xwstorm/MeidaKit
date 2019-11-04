@@ -8,7 +8,7 @@
 #pragma once
 #include <stdio.h>
 #include <utility>
-#include "av_base.h"
+#include "base/mk_base.h"
 MK_BEGIN
 class ThreadMessage;
 
@@ -21,7 +21,7 @@ public:
 
 class MessageHandler {
 public:
-    virtual ~MessageHandler();
+    virtual ~MessageHandler(){};
     virtual void OnMessage(MessageData* msg) = 0;
     
 protected:
@@ -33,7 +33,7 @@ class FunctorMessageHandler : public MessageHandler {
 public:
     explicit FunctorMessageHandler(FunctorT&& functor)
     : mFunctor(std::forward<FunctorT>(functor)) {}
-    virtual void OnMessage(MessageData* msg) {
+    void OnMessage(MessageData* msg) override {
         mResult = mFunctor();
     }
     ReturnT MoveResult() {
@@ -51,7 +51,7 @@ class FunctorMessageHandler<void, FunctorT> : public MessageHandler {
 public:
     explicit FunctorMessageHandler(FunctorT&& functor)
     : mFunctor(std::forward<FunctorT>(functor)) {}
-    virtual void OnMessage(MessageData* msg) {
+    void OnMessage(MessageData* msg) override{
         mFunctor();
     }
     void result() const {}

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <stdio.h>
-#include "av_base.h"
+#include "base/mk_base.h"
 #include "event.h"
 MK_BEGIN
 
@@ -91,6 +91,7 @@ void MKList<T>::addBack(T t) {
         node->prev = mTail;
         mTail = node;
     }
+    mSize++;
 }
 
 template <typename T>

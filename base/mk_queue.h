@@ -15,9 +15,15 @@ MK_BEGIN
 template <typename T>
 class MKQueue : public MKList<T> {
 public:
-    MKQueue();
-    void enqueue(T t);
-    T dequeue();
+    MKQueue() {
+        
+    }
+    void enqueue(T t) {
+        mList.addBack(t);
+    }
+    T dequeue() {
+        return mList.popFront();
+    }
 protected:
     MKList<T> mList;
 };

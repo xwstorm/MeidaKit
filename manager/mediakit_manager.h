@@ -8,7 +8,7 @@
 #pragma
 
 #include <stdio.h>
-#include "base/av_thread.h"
+#include "base/mk_thread.h"
 MK_BEGIN
 class MediaKitManager {
 public:

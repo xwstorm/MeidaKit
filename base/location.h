@@ -4,16 +4,19 @@
 //
 //  Created by xiewei on 2019/6/17.
 //
+#pragma once
 
-#ifndef Location_h
-#define Location_h
+#include "base/mk_base.h"
+MK_BEGIN
+#ifndef RTC_BASE_STRINGIZE_MACROS_H_
+#define RTC_BASE_STRINGIZE_MACROS_H_
 
-#include <stdio.h>
-#include "av_base.h"
+#define STRINGIZE_NO_EXPANSION(x) #x
 
-#define CALL_FROM_HERE CALL_FROM_HERE_WITH_FUNCTION(__FUNCTION__)
-#define CALL_FROM_HERE_WITH_CUNTION(function_name) \
-Location(function_name, __FILE__ ":" STRINGIZE(__LINE__))
+#define STRINGIZE(x) STRINGIZE_NO_EXPANSION(x)
+
+#endif  // RTC_BASE_STRINGIZE_MACROS_H_
+
 
 class MKLocation {
 public:
@@ -26,4 +29,8 @@ private:
     const char* mFileAndLine = nullptr;
 };
 
-#endif /* Location_h */
+#define CALL_FROM_HERE CALL_FROM_HERE_WITH_FUNCTION(__FUNCTION__)
+#define CALL_FROM_HERE_WITH_FUNCTION(function_name) \
+::mk::MKLocation(function_name, __FILE__ ":" STRINGIZE(__LINE__))
+
+MK_END

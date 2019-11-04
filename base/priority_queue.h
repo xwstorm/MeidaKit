@@ -57,7 +57,7 @@ PriorityQueue<T>::PriorityQueue()
 
 template <typename T>
 void PriorityQueue<T>::enqueue(T t, Priority priority) {
-    lock();
+    std::unique_lock<std::mutex> uLock(mMutex);
     switch (priority) {
         case LOW_PRIORITY:
             mLowList.addBack(t);
@@ -67,7 +67,7 @@ void PriorityQueue<T>::enqueue(T t, Priority priority) {
         default:
             break;
     }
-    unLock();
+    mCV.notify_one();
 }
 
 template <typename T>
