@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.source_files     =  [
     'base/*.{h,hpp,c,cc,cpp}',
-    'manager/*.{h,hpp,c,cc,cpp}'
+    'manager/*.{h,hpp,c,cc,cpp}',
+    'video/*.{h,hpp,c,cc,cpp}'
   ]
 end

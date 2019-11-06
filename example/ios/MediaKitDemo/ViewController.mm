@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #include "manager/mediakit_manager.h"
 #include "thread_test.h"
+#include "video/video_egl_render_manager.h"
 @interface ViewController ()
 
 @end
@@ -20,8 +21,10 @@
     // Do any additional setup after loading the view, typically from a nib.
 //    mk::MediaKitManager* manager = new mk::MediaKitManager();
 //    manager->init();
-    ThreadTest* test = new ThreadTest();
-    test->func1();
+//    ThreadTest* test = new ThreadTest();
+//    test->func1();
+    mk::VideoEGLRenderManager* v = new VideoEGLRenderManager();
+    v->open();
 }
 
 

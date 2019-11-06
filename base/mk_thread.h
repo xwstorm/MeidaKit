@@ -8,7 +8,7 @@
 
 #pragma once
 #include <thread>
-#include <queue>
+#include <list>
 #include "base/mk_base.h"
 #include "base/location.h"
 #include "thread_message.h"
@@ -71,8 +71,8 @@ protected:
     std::thread mWThread;
     
     // message queue
-    std::queue<ThreadSendTaskMessage*> mSendQueue1;
-    std::queue<ThreadMessage*> mPostQueue1;
+    std::list<ThreadSendTaskMessage*> mSendQueue1;
+    std::list<ThreadMessage*> mPostQueue1;
     
     std::mutex mMsgMutex;
     std::condition_variable mMsgCV;

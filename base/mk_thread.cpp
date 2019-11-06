@@ -37,9 +37,9 @@ void MKThread::close() {
     std::unique_lock<std::mutex> lock(mMsgMutex);
     mIsQuiting = true;
     while (!mPostQueue1.empty()) {
-        ThreadMessage* m = mPostQueue1.back();
+        ThreadMessage* m = mPostQueue1.front();
         delete m;
-        mPostQueue1.pop();
+        mPostQueue1.pop_front();
     }
     lock.unlock();
     
@@ -96,7 +96,18 @@ bool MKThread::Post(const MKLocation& posted_from,
     if (IsQuitting()) {
         return false;
     }
-    mPostQueue1.push(msg);
+    
+    for (auto it = mPostQueue1.begin(); it != mPostQueue1.end(); ++it) {
+        if ((*it)->msg_delay > delay) {
+            mPostQueue1.insert(it, msg);
+            msg = nullptr;
+            break;
+        }
+    }
+    
+    if (msg != nullptr) {
+        mPostQueue1.push_back(msg);
+    }
     mMsgCV.notify_one();
     return true;
 }
@@ -117,18 +128,22 @@ void MKThread::Send(const MKLocation& posted_from,
         return;
     }
     std::unique_lock<std::mutex> lock(mMsgMutex);
-    mSendQueue1.push(&msg);
-    mMsgCV.wait(lock);
+    mSendQueue1.push_back(&msg);
+    lock.unlock();
+    
+    mMsgCV.notify_one();
+    
+    msg.wait();
 }
 
 bool MKThread::ProcessMessages() {
     while (!IsQuitting()) {
-        
         std::unique_lock<std::mutex> lock(mMsgMutex);
+        std::this_thread::sleep_for(std::chrono::seconds(10000));
         if (!mSendQueue1.empty()) {
             // return msg
-            ThreadSendTaskMessage* msg = mSendQueue1.back();
-            mSendQueue1.pop();
+            ThreadSendTaskMessage* msg = mSendQueue1.front();
+            mSendQueue1.pop_front();
             lock.unlock();
             if (msg->phandler) {
                 msg->phandler->OnMessage(msg->msg_data);
@@ -138,39 +153,39 @@ bool MKThread::ProcessMessages() {
         } else if (!mPostQueue1.empty()) {
             // return msg
             ThreadMessage* msg = nullptr;
-            size_t size = mPostQueue1.size();
-            int64_t minDelay = 0;
-            auto start = std::chrono::system_clock::now();
-            for (int i=0; i<size; ++i) {
-                ThreadMessage* m = mPostQueue1.back();
-                mPostQueue1.pop();
-                if (m->msg_delay == 0) {
+            
+            while (msg == nullptr) {
+                ThreadMessage* m = mPostQueue1.front();
+                if (m->msg_delay <= 5) {
                     msg = m;
+                    mPostQueue1.pop_front();
                     break;
                 } else {
-                    int64_t elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(start - m->triged_time).count();
-                    if (elapsed <= 2 ) {
+                    auto now = std::chrono::system_clock::now();
+                    int64_t elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m->triged_time).count();
+                    int64_t timeToWait = m->msg_delay - elapsed;
+                    if (timeToWait <= 5) {
                         msg = m;
+                        mPostQueue1.pop_front();
                         break;
                     } else {
-                        mPostQueue1.push(m);
-                        minDelay = minDelay < elapsed ? minDelay : elapsed;
+                        mMsgCV.wait_for(lock, std::chrono::milliseconds(timeToWait));
                     }
                 }
             }
-            if (minDelay > 0) {
-                mMsgCV.wait_for(lock, std::chrono::milliseconds(minDelay));
-            } else {
-                if (msg && msg->phandler) {
-                    lock.unlock();
-                    msg->phandler->OnMessage(msg->msg_data);
-                }
+            if (!IsQuitting() && msg && msg->phandler) {
+                lock.unlock();
+                msg->phandler->OnMessage(msg->msg_data);
+            }
+            if (msg) {
+                delete msg;
             }
             continue;
         } else {
+            // empty
             mMsgCV.wait(lock);
         }
-    }
+    } // while
     return false;
 }
 
