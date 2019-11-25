@@ -8,4 +8,11 @@
 #define MK_BEGIN namespace mkns {
 #define MK_END  }
 
-#define S_OK 0
+const int S_OK = 0;
+const int S_FAIL = -1;
+
+enum MKSourceState {
+    MKStateReady,
+    MKStateOpened,
+    MKStateClosed,
+};

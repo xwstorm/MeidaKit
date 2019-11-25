@@ -34,7 +34,6 @@ struct ThreadMessage {
     int64_t ts_sensitive;
     int64_t msg_delay;
     std::chrono::system_clock::time_point triged_time;
-//    ThreadMessageType messageType;
 };
 
 struct ThreadPostTaskMessage : public ThreadMessage {

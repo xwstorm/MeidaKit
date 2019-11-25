@@ -139,7 +139,6 @@ void MKThread::Send(const MKLocation& posted_from,
 bool MKThread::ProcessMessages() {
     while (!IsQuitting()) {
         std::unique_lock<std::mutex> lock(mMsgMutex);
-        std::this_thread::sleep_for(std::chrono::seconds(10000));
         if (!mSendQueue1.empty()) {
             // return msg
             ThreadSendTaskMessage* msg = mSendQueue1.front();

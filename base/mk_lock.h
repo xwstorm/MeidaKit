@@ -1,6 +1,6 @@
 //
 //  mk_lock.h
-//  Pods
+//  MediaKit
 //
 //  Created by xiewei on 2019/10/31.
 //

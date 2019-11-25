@@ -1,6 +1,6 @@
 //
 //  mediakit_manager.hpp
-//  Pods
+//  MediaKit
 //
 //  Created by xiewei on 2019/7/1.
 //

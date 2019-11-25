@@ -16,6 +16,8 @@ Pod::Spec.new do |s|
   s.source_files     =  [
     'base/*.{h,hpp,c,cc,cpp}',
     'manager/*.{h,hpp,c,cc,cpp}',
-    'video/*.{h,hpp,c,cc,cpp}'
+    'video/*.{h,hpp,c,cc,cpp}',
+    'video/ios/*.{h,hpp,c,cc,cpp}'
+
   ]
 end

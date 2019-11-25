@@ -25,7 +25,7 @@ public:
     template <class ReturnT, class FunctorT>
     ReturnT Invoke(const MKLocation& posted_from, FunctorT&& functor) {
         FunctorMessageHandler<ReturnT, FunctorT> handler(std::forward<FunctorT>(functor));
-        Send(posted_from, handler);
+        Send(posted_from, &handler);
         return handler.MoveResult();
     }
     

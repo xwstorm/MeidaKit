@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #include "manager/mediakit_manager.h"
 #include "thread_test.h"
-#include "video/video_egl_render_manager.h"
+#include "video/video_render_egl.h"
 @interface ViewController ()
 
 @end
@@ -23,7 +23,8 @@
 //    manager->init();
 //    ThreadTest* test = new ThreadTest();
 //    test->func1();
-    mk::VideoEGLRenderManager* v = new VideoEGLRenderManager();
+    mk::VideoRenderEGL* v = new VideoRenderEGL();
+    v->setRenderInterval(2000);
     v->open();
 }
 
