@@ -7,5 +7,9 @@
 
 #include "base/mk_base.h"
 MK_BEGIN
-
+class VideoRenderMetal {
+    
+public:
+    
+};
 MK_END

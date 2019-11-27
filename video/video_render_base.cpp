@@ -33,4 +33,7 @@ int VideoRenderBase::updateFrame(std::string streamId, MKVideoFrame* videoFrame)
     return S_OK;
 }
 
+int VideoRenderBase::setView(std::string streamId, MKView* view) {
+    return S_OK;
+}
 MK_END

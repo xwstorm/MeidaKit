@@ -8,10 +8,9 @@
 #pragma once
 #include "base/mk_base.h"
 #include "base/mk_thread.h"
-#include "video/mk_view.h"
 #include "video/mk_video_frame.h"
-
 MK_BEGIN
+class MKView;
 class VideoRenderBase {
 public:
     VideoRenderBase();

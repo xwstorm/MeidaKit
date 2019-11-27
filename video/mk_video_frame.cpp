@@ -7,23 +7,23 @@
 
 #include "mk_video_frame.h"
 MK_BEGIN
-int MKVideoFrame::width() {
+int MKVideoFrame::width() const {
     return 0;
 }
 
-int MKVideoFrame::height() {
+int MKVideoFrame::height() const {
     return 0;
 }
 
 
-int MKVideoFrame::targetWidth() {
+int MKVideoFrame::targetWidth() const {
     if (mTargetWidth == -1) {
         return width();
     }
     return mTargetWidth;
 }
 
-int MKVideoFrame::targetHeight() {
+int MKVideoFrame::targetHeight() const{
     if (mTargetHeight == -1) {
         return height();
     }

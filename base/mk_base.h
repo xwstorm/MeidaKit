@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <memory.h>
 #include <string.h>
+#include <assert.h>
 
 #define mkns mk
 #define MK_BEGIN namespace mkns {

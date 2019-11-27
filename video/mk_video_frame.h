@@ -10,6 +10,7 @@
 #include "base/mk_base.h"
 MK_BEGIN
 enum MKVideoFrameType {
+    MK_UNKNOW,
     MK_I420,
     MK_NV12,
     MK_NV21,
@@ -25,16 +26,16 @@ enum MKVideoRotation {
 
 class MKVideoFrame {
 public:
-    int width();
-    int height();
-    MKVideoFrameType format() {
+    int width() const;
+    int height() const;
+    MKVideoFrameType GetFormat() const {
         return mFormat;
     }
-    MKVideoRotation rotation() {
+    MKVideoRotation rotation() const {
         return mRotation;
     }
-    int targetWidth();
-    int targetHeight();
+    int targetWidth() const;
+    int targetHeight() const;
     void setTargetSize(int width, int height);
 protected:
     

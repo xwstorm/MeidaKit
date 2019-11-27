@@ -11,6 +11,9 @@
 MK_BEGIN
 class MKCVPixelBuffer : public MKVideoFrame {
 public:
+    int updateBuffer(CVPixelBufferRef buffer);
     
+protected:
+    CVPixelBufferRef mCVPixelBuffer = nil;
 };
 MK_END

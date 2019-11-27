@@ -9,18 +9,16 @@
 #include "base/mk_base.h"
 MK_BEGIN
 class MKView;
+class MKEglContext;
 class MKEglBase {
 public:
-    int open();
-    void close();
-    int bindView(MKView* view);
+    virtual int open(MKEglContext* sharedContext) = 0;
+    virtual void close() = 0;
+    virtual int bindView(MKView* view) = 0;
+    virtual ~MKEglBase() {};
     
 protected:
-    int initContext();
-    void destroyContext();
-    
-protected:
-    MKView* mLastView = nullptr;
+    bool mInitialized = false;
 };
 
 MK_END

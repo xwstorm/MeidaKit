@@ -9,11 +9,9 @@
 #include <map>
 #include "video/video_render_base.h"
 #include "video/mk_egl_base.h"
-#include "video/mk_view.h"
 
 MK_BEGIN
-
-
+class MKView;
 class RenderResource {
 public:
     inline void updateFrame(MKVideoFrame* frame) {
@@ -25,6 +23,9 @@ public:
         }
     }
     inline void updateView(MKView* view) {
+        if (mView) {
+            delete mView;
+        }
         mView = view;
     }
     
@@ -46,9 +47,9 @@ protected:
     bool mDirty = false;
 };
 
-class VideoRenderEGL : public VideoRenderBase {
+class VideoRenderEGLBase : public VideoRenderBase {
 public:
-    VideoRenderEGL();
+    VideoRenderEGLBase();
     int open() override;
     void close() override;
     int updateFrame(std::string streamId, MKVideoFrame* videoFrame) override;
@@ -58,7 +59,7 @@ protected:
     virtual void render();
     void postDelayTask();
 protected:
-    MKEglBase mEglBase;
+    MKEglBase* mEGLEnv = nullptr;
     std::mutex mMapMutex;
     std::atomic_int mRenderInterval; // ms
     std::map<std::string, RenderResource> mResourceMap;

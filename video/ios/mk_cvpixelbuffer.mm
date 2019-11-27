@@ -9,4 +9,7 @@
 
 MK_BEGIN
 
+int MKCVPixelBuffer::updateBuffer(CVPixelBufferRef buffer) {
+    return S_OK;
+}
 MK_END
