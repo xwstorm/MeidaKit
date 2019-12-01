@@ -7,14 +7,14 @@
 
 #include "video_render_base.h"
 MK_BEGIN
-VideoRenderBase::VideoRenderBase()
+BVideoRender::BVideoRender()
 : mRenderThread("video_render")
 , mState(MKStateClosed)
 {
     
 }
 
-int VideoRenderBase::open() {
+int BVideoRender::open() {
     if (mState == MKStateOpened) {
         return S_OK;
     }
@@ -23,17 +23,17 @@ int VideoRenderBase::open() {
     return 0;
 }
 
-void VideoRenderBase::close() {
+void BVideoRender::close() {
     
     mRenderThread.close();
     mState = MKStateClosed;
 }
 
-int VideoRenderBase::updateFrame(std::string streamId, MKVideoFrame* videoFrame) {
+int BVideoRender::updateFrame(std::string streamId, BVideoFrame* videoFrame) {
     return S_OK;
 }
 
-int VideoRenderBase::setView(std::string streamId, MKView* view) {
+int BVideoRender::setView(std::string streamId, MKView* view) {
     return S_OK;
 }
 MK_END

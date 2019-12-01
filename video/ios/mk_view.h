@@ -16,6 +16,7 @@
 
 
 MK_BEGIN
+
 class MKView {
 public:
     MKView();

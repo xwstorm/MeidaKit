@@ -1,15 +1,15 @@
 //
-//  mk_video_frame.h
-//  MediaKit
+//  video_frame.hpp
+//  Pods
 //
-//  Created by xiewei on 2019/11/6.
+//  Created by xiewei on 2019/11/27.
 //
 
 #pragma once
 
 #include "base/mk_base.h"
 MK_BEGIN
-enum MKVideoFrameType {
+enum MKVideoFrameFormat {
     MK_UNKNOW,
     MK_I420,
     MK_NV12,
@@ -24,24 +24,36 @@ enum MKVideoRotation {
     MKVideoRotation_270
 };
 
-class MKVideoFrame {
+enum MKVideoFrameType {
+    MK_RAW_FRAME,
+    MK_CVPIXEL_FRAME,
+};
+class BVideoFrame {
 public:
-    int width() const;
-    int height() const;
-    MKVideoFrameType GetFormat() const {
+    virtual int width() const = 0;
+    virtual int height() const = 0;
+    MKVideoFrameFormat GetFormat() const {
         return mFormat;
     }
+    
     MKVideoRotation rotation() const {
         return mRotation;
     }
+    
     int targetWidth() const;
     int targetHeight() const;
+    
+    MKVideoFrameType GetType();
+    
     void setTargetSize(int width, int height);
+    
 protected:
     
-    MKVideoFrameType mFormat;
+    MKVideoFrameFormat mFormat;
     MKVideoRotation mRotation = MKVideoRotation_0;
     int mTargetWidth = -1;
     int mTargetHeight = -1;
+    MKVideoFrameType mType = MK_RAW_FRAME;
 };
 MK_END
+

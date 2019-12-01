@@ -1,5 +1,5 @@
 //
-//  mk_egl_base.h
+//  egl_env.h
 //  MediaKit
 //
 //  Created by xiewei on 2019/11/6.
@@ -10,12 +10,12 @@
 MK_BEGIN
 class MKView;
 class MKEglContext;
-class MKEglBase {
+class BEglEnv {
 public:
     virtual int open(MKEglContext* sharedContext) = 0;
     virtual void close() = 0;
     virtual int bindView(MKView* view) = 0;
-    virtual ~MKEglBase() {};
+    virtual ~BEglEnv() {};
     
 protected:
     bool mInitialized = false;

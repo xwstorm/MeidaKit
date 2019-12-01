@@ -5,20 +5,22 @@
 //  Created by xiewei on 2019/11/4.
 //
 
-#include "video_render_egl_base.h"
+#include "video_render_egl.h"
 #include "base/location.h"
+#include "video_render_program_egl.h"
+
 MK_BEGIN
-VideoRenderEGLBase::VideoRenderEGLBase()
+BVideoRenderEgl::BVideoRenderEgl()
 : mRenderInterval(33) {
     
 }
 
-int VideoRenderEGLBase::open() {
+int BVideoRenderEgl::open() {
     if (mState == MKStateOpened) {
         return S_OK;
     }
     
-    int ret = VideoRenderBase::open();
+    int ret = BVideoRender::open();
     if (ret != S_OK) {
         return ret;
     }
@@ -27,12 +29,13 @@ int VideoRenderEGLBase::open() {
         return mEGLEnv->open(nullptr);
     });
     
+    // init renderer
     postDelayTask();
     
     return S_OK;
 }
 
-void VideoRenderEGLBase::close() {
+void BVideoRenderEgl::close() {
     std::unique_lock<std::mutex> lock(mMapMutex);
     mState = MKStateClosed;
     lock.unlock();
@@ -48,7 +51,7 @@ void VideoRenderEGLBase::close() {
     mRenderThread.close();
 }
 
-int VideoRenderEGLBase::updateView(std::string streamId, MKView* view) {
+int BVideoRenderEgl::updateView(std::string streamId, MKView* view) {
     mRenderThread.Invoke<void>(CALL_FROM_HERE, [this, streamId, view](){
         if (view == nullptr) {
             // clear internal view
@@ -67,7 +70,7 @@ int VideoRenderEGLBase::updateView(std::string streamId, MKView* view) {
     return S_OK;
 }
 
-int VideoRenderEGLBase::updateFrame(std::string streamId, MKVideoFrame* videoFrame) {
+int BVideoRenderEgl::updateFrame(std::string streamId, BVideoFrame* videoFrame) {
     if (mState == MKStateClosed) {
         return S_FAIL;
     }
@@ -93,7 +96,7 @@ int VideoRenderEGLBase::updateFrame(std::string streamId, MKVideoFrame* videoFra
     return S_OK;
 }
 
-void VideoRenderEGLBase::render() {
+void BVideoRenderEgl::render() {
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     int64_t elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - mLastRenderTime).count();
     mLastRenderTime = now;
@@ -102,9 +105,16 @@ void VideoRenderEGLBase::render() {
     for(auto it=mResourceMap.begin(); it != mResourceMap.end(); ++it) {
         RenderResource& resource = it->second;
         if (resource.view()) {
+            if (!resource.dirty()) {
+                continue;
+            }
             if(mEGLEnv->bindView(resource.view()) == S_OK) {
                 // render
-                
+                if (mRenderer) {
+                    mRenderer->render(resource.frame());
+                }
+            } else {
+                assert(false);
             }
         } else {
             // warning,
@@ -114,7 +124,7 @@ void VideoRenderEGLBase::render() {
     postDelayTask();
 }
 
-void VideoRenderEGLBase::postDelayTask() {
+void BVideoRenderEgl::postDelayTask() {
     if (mState == MKStateOpened) {
         mRenderThread.AsyncInvokeDelay<void>(CALL_FROM_HERE, [this]() {
             render();
@@ -122,7 +132,7 @@ void VideoRenderEGLBase::postDelayTask() {
     }
 }
 
-void VideoRenderEGLBase::setRenderInterval(int interval) {
+void BVideoRenderEgl::setRenderInterval(int interval) {
     mRenderInterval = interval;
 }
 MK_END

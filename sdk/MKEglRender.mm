@@ -7,7 +7,7 @@
 
 #import "MKEglRender.h"
 
-#include "video/ios/video_render_egl.h"
+#include "video/ios/mk_video_render_egl.h"
 #include "video/ios/mk_view.h"
 #include "video/ios/mk_cvpixelbuffer.h"
 
@@ -45,7 +45,7 @@
 @end
 
 @interface MKEglRender() {
-    mk::VideoRenderEgl* _eglRender;
+    mk::MKVideoRenderEgl* _eglRender;
     NSMutableDictionary* _viewDict;
 }
 @end
@@ -61,7 +61,7 @@
     if (_eglRender != nil) {
         return 0;
     }
-    _eglRender = new mk::VideoRenderEgl();
+    _eglRender = new mk::MKVideoRenderEgl();
     _viewDict = [[NSMutableDictionary alloc] init];
     if (_eglRender->open() == 0) {
         return 0;

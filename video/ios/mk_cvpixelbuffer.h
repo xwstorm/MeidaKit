@@ -7,12 +7,15 @@
 
 #pragma once
 #include "base/mk_base.h"
-#include "video/mk_video_frame.h"
+#include "video/video_frame.h"
 MK_BEGIN
-class MKCVPixelBuffer : public MKVideoFrame {
+class MKCVPixelBuffer : public BVideoFrame {
 public:
+    MKCVPixelBuffer();
     int updateBuffer(CVPixelBufferRef buffer);
     
+    int width() const override;
+    int height() const override;
 protected:
     CVPixelBufferRef mCVPixelBuffer = nil;
 };

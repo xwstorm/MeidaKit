@@ -8,15 +8,15 @@
 #pragma once
 #include "base/mk_base.h"
 #include "base/mk_thread.h"
-#include "video/mk_video_frame.h"
+#include "video/video_frame.h"
 MK_BEGIN
 class MKView;
-class VideoRenderBase {
+class BVideoRender {
 public:
-    VideoRenderBase();
+    BVideoRender();
     virtual int open();
     virtual void close();
-    virtual int updateFrame(std::string streamId, MKVideoFrame* videoFrame);
+    virtual int updateFrame(std::string streamId, BVideoFrame* videoFrame);
     int setView(std::string streamId, MKView* view);
 protected:
     

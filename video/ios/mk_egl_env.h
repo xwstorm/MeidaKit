@@ -7,10 +7,10 @@
 
 #pragma once
 #include "base/mk_base.h"
-#include "video/mk_egl_base.h"
+#include "video/egl_env.h"
 
 MK_BEGIN
-class MKEglEnv : public MKEglBase{
+class MKEglEnv : public BEglEnv{
 public:
     ~MKEglEnv();
     int open(MKEglContext* sharedContext) override;

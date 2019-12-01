@@ -8,13 +8,15 @@
 #pragma once
 #include <map>
 #include "video/video_render_base.h"
-#include "video/mk_egl_base.h"
+#include "video/egl_env.h"
 
 MK_BEGIN
 class MKView;
+class BVideoRenderer;
+
 class RenderResource {
 public:
-    inline void updateFrame(MKVideoFrame* frame) {
+    inline void updateFrame(BVideoFrame* frame) {
         mFrame = frame;
         if(frame) {
             mDirty = true;
@@ -22,6 +24,7 @@ public:
             mDirty = false;
         }
     }
+    
     inline void updateView(MKView* view) {
         if (mView) {
             delete mView;
@@ -32,7 +35,7 @@ public:
     inline MKView* view() {
         return mView;
     }
-    inline MKVideoFrame* frame() {
+    inline BVideoFrame* frame() {
         return mFrame;
     }
     inline bool dirty() {
@@ -42,24 +45,26 @@ public:
         mDirty = false;
     }
 protected:
-    MKVideoFrame* mFrame = nullptr;
+    BVideoFrame* mFrame = nullptr;
     MKView* mView = nullptr;
     bool mDirty = false;
 };
 
-class VideoRenderEGLBase : public VideoRenderBase {
+
+class BVideoRenderEgl : public BVideoRender {
 public:
-    VideoRenderEGLBase();
+    BVideoRenderEgl();
     int open() override;
     void close() override;
-    int updateFrame(std::string streamId, MKVideoFrame* videoFrame) override;
+    int updateFrame(std::string streamId, BVideoFrame* videoFrame) override;
     int updateView(std::string streamId, MKView*);
     void setRenderInterval(int interval);
 protected:
     virtual void render();
     void postDelayTask();
 protected:
-    MKEglBase* mEGLEnv = nullptr;
+    BEglEnv* mEGLEnv = nullptr;
+    BVideoRenderer* mRenderer = nullptr;
     std::mutex mMapMutex;
     std::atomic_int mRenderInterval; // ms
     std::map<std::string, RenderResource> mResourceMap;
