@@ -1,5 +1,5 @@
 //
-//  video_render_base.h
+//  render_manager_base.h
 //  MediaKit
 //
 //  Created by xiewei on 2019/11/6.

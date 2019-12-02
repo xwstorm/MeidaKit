@@ -12,10 +12,17 @@ MK_BEGIN
 class MKCVPixelBuffer : public BVideoFrame {
 public:
     MKCVPixelBuffer();
-    int updateBuffer(CVPixelBufferRef buffer);
+    
+    int updateBuffer(CVPixelBufferRef buffer, int rotation);
     
     int width() const override;
     int height() const override;
+    CVPixelBufferRef GetCVPixelBuffer() {
+        return mCVPixelBuffer;
+    }
+    
+    void Release() override;
+    
 protected:
     CVPixelBufferRef mCVPixelBuffer = nil;
 };

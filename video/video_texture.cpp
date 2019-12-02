@@ -9,12 +9,10 @@
 
 MK_BEGIN
 
-VideoTexture::VideoTexture(MKVideoFrameFormat format)
-    : mFrameType(format){
+VideoTexture::VideoTexture() {
     
 }
 int VideoTexture::updateFrame(const BVideoFrame* frame) {
-    assert(mFrameType == frame->GetFormat());
     switch (mFrameType) {
         case MK_I420: {
             break;
@@ -32,5 +30,9 @@ int VideoTexture::updateFrame(const BVideoFrame* frame) {
             break;
     }
     return S_OK;
+}
+
+uint32_t VideoTexture::GetTextureId(int index) {
+    return 0;
 }
 MK_END

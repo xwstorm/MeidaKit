@@ -38,11 +38,23 @@ const std::string gNV12ToRGBFragmentShader = std::string(
          "1.4,  -0.711,  0.0)  * yuv;"
     "}");
 
-int BVideoRenderer::render(BVideoFrame* frame) {
+BVideoRenderProgramEgl::~BVideoRenderProgramEgl() {
+    
+}
+
+int BVideoRenderProgramEgl::render(BVideoFrame* frame) {
+    MKVideoFrameFormat format = frame->GetFormat();
+    switch (format) {
+        case MK_NV12:
+            break;
+            
+        default:
+            break;
+    }
     return S_OK;
 }
 
-int BVideoRenderer::updateTexture(BVideoFrame* frame) {
+int BVideoRenderProgramEgl::updateTexture(BVideoFrame* frame) {
     // update texture
     if (mTexture->updateFrame(frame) != S_OK) {
         return S_FAIL;
@@ -66,7 +78,26 @@ int BVideoRenderer::updateTexture(BVideoFrame* frame) {
     return S_OK;
 }
 
-int BVideoRenderer::renderNV12(VideoTexture* texture) {
+int BVideoRenderProgramEgl::RenderInternal(VideoTexture* texture) {
+    // shader render
+//    switch (frame->GetFormat()) {
+//        case MK_NV12:
+//            return renderNV12(mTexture);
+//            break;
+//        case MK_NV21:
+//            return renderNV12(mTexture);
+//        case MK_RGB:
+//            return renderRGB(mTexture);
+//        case MK_I420:
+//            return renderI420(mTexture);
+//        default:
+//            break;
+//    }
+    
+    return S_OK;
+}
+
+int BVideoRenderProgramEgl::renderNV12(VideoTexture* texture) {
     if (mNV12Program == 0) {
         int ret = createNV12Program();
         if (ret != S_OK) {
@@ -77,36 +108,36 @@ int BVideoRenderer::renderNV12(VideoTexture* texture) {
     return S_OK;
 }
 
-int BVideoRenderer::renderI420(VideoTexture* texture) {
+int BVideoRenderProgramEgl::renderI420(VideoTexture* texture) {
     return S_OK;
 }
 
-int BVideoRenderer::renderRGB(VideoTexture* texture) {
+int BVideoRenderProgramEgl::renderRGB(VideoTexture* texture) {
     return S_OK;
 }
 
 
-int BVideoRenderer::createNV12Program() {
+int BVideoRenderProgramEgl::createNV12Program() {
     
     return S_OK;
 }
-int BVideoRenderer::createI420Program() {
+int BVideoRenderProgramEgl::createI420Program() {
     return S_OK;
 }
-int BVideoRenderer::createRGBProgram() {
+int BVideoRenderProgramEgl::createRGBProgram() {
     return S_OK;
 }
 
 
-void BVideoRenderer::DestroyNV12Program() {
+void BVideoRenderProgramEgl::DestroyNV12Program() {
     
 }
 
-void BVideoRenderer::DestroyI420Program() {
+void BVideoRenderProgramEgl::DestroyI420Program() {
     
 }
 
-void BVideoRenderer::DestroyRGBProgram() {
+void BVideoRenderProgramEgl::DestroyRGBProgram() {
     
 }
 

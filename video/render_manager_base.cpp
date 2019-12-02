@@ -5,7 +5,7 @@
 //  Created by xiewei on 2019/11/6.
 //
 
-#include "video_render_base.h"
+#include "render_manager_base.h"
 MK_BEGIN
 BVideoRender::BVideoRender()
 : mRenderThread("video_render")

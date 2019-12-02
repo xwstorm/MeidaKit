@@ -9,10 +9,14 @@
 
 @interface MKEglRender : NSObject
 
+- (int)open;
+- (void)close;
+
 - (void)setView:(UIView*)view
        toStream:(NSString*)streamId;
 
 - (void)updateFrame:(CVPixelBufferRef)buffer
+       withRotation:(int)roation
            toStream:(NSString*)streamId;
 
 @end

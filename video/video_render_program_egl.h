@@ -5,17 +5,23 @@
 //  Created by xiewei on 2019/11/28.
 //
 
+#pragma once
+
 #include "base/mk_base.h"
 #include "video_texture.h"
 
 MK_BEGIN
 class BVideoFrame;
-class BVideoRenderer {
+class BVideoRenderProgramEgl {
 public:
+    virtual ~BVideoRenderProgramEgl();
+    
     int render(BVideoFrame* frame);
     
 protected:
     virtual int updateTexture(BVideoFrame* frame);
+    
+    int RenderInternal(VideoTexture*);
     
     int renderNV12(VideoTexture* texture);
     int renderI420(VideoTexture* texture);

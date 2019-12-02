@@ -7,7 +7,7 @@
 
 #import "MKEglRender.h"
 
-#include "video/ios/mk_video_render_egl.h"
+#include "video/ios/mk_render_manager_egl.h"
 #include "video/ios/mk_view.h"
 #include "video/ios/mk_cvpixelbuffer.h"
 
@@ -45,7 +45,7 @@
 @end
 
 @interface MKEglRender() {
-    mk::MKVideoRenderEgl* _eglRender;
+    mk::MKEglRenderManager* _eglRender;
     NSMutableDictionary* _viewDict;
 }
 @end
@@ -57,11 +57,11 @@
     return self;
 }
 
-- (int)start {
+- (int)open {
     if (_eglRender != nil) {
         return 0;
     }
-    _eglRender = new mk::MKVideoRenderEgl();
+    _eglRender = new mk::MKEglRenderManager();
     _viewDict = [[NSMutableDictionary alloc] init];
     if (_eglRender->open() == 0) {
         return 0;
@@ -88,14 +88,15 @@
         [_viewDict setValue:renderView forKey:streamId];
     }
     [renderView updateView:view];
-    _eglRender->setView([streamId UTF8String], [renderView getView]);
+    _eglRender->updateView([streamId UTF8String], [renderView getView]);
 }
 
 - (void)updateFrame:(CVPixelBufferRef)buffer
+       withRotation:(int)roation
            toStream:(NSString*)streamId {
     if (_eglRender) {
         mk::MKCVPixelBuffer* mkbuffer = new mk::MKCVPixelBuffer();
-        mkbuffer->updateBuffer(buffer);
+        mkbuffer->updateBuffer(buffer, roation);
         _eglRender->updateFrame([streamId UTF8String], mkbuffer);
     }
 }

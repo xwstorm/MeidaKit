@@ -5,6 +5,7 @@
 //  Created by xiewei on 2019/11/29.
 //
 
+#pragma once
 #include "base/mk_base.h"
 
 #if defined(MK_IOS)

@@ -30,6 +30,7 @@ enum MKVideoFrameType {
 };
 class BVideoFrame {
 public:
+    virtual void Release();
     virtual int width() const = 0;
     virtual int height() const = 0;
     MKVideoFrameFormat GetFormat() const {
@@ -48,6 +49,7 @@ public:
     void setTargetSize(int width, int height);
     
 protected:
+    virtual ~BVideoFrame();
     
     MKVideoFrameFormat mFormat;
     MKVideoRotation mRotation = MKVideoRotation_0;

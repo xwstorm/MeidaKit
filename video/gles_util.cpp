@@ -37,7 +37,7 @@ uint32_t GLESUtil::CreateShader(uint32_t shaderType, const char** shaderSource) 
     
     glCompileShader(shader);
     
-    if(checkShaderState(shader) == false){
+    if(CheckShaderState(shader) == false){
         assert(false);
 
         glDeleteShader(shader);

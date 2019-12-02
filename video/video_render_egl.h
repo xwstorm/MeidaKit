@@ -1,21 +1,19 @@
 //
 //  video_render_egl.h
-//  MediaKit
+//  Pods
 //
-//  Created by xiewei on 2019/11/4.
+//  Created by xiewei on 2019/12/2.
 //
 
 #pragma once
-#include <map>
-#include "video/video_render_base.h"
-#include "video/egl_env.h"
+#include "video_render_program_egl.h"
 
 MK_BEGIN
+class BVideoFrame;
 class MKView;
-class BVideoRenderer;
-
-class RenderResource {
+class VideoRenderEgl {
 public:
+    int Render();
     inline void updateFrame(BVideoFrame* frame) {
         mFrame = frame;
         if(frame) {
@@ -44,31 +42,16 @@ public:
     void resetDirty() {
         mDirty = false;
     }
+    
 protected:
+    int RenderTexture(VideoTexture* texture);
+public:
+    BVideoRenderProgramEgl* mRenderer = nullptr;
+    VideoTexture mTexture;
+    
     BVideoFrame* mFrame = nullptr;
     MKView* mView = nullptr;
     bool mDirty = false;
 };
-
-
-class BVideoRenderEgl : public BVideoRender {
-public:
-    BVideoRenderEgl();
-    int open() override;
-    void close() override;
-    int updateFrame(std::string streamId, BVideoFrame* videoFrame) override;
-    int updateView(std::string streamId, MKView*);
-    void setRenderInterval(int interval);
-protected:
-    virtual void render();
-    void postDelayTask();
-protected:
-    BEglEnv* mEGLEnv = nullptr;
-    BVideoRenderer* mRenderer = nullptr;
-    std::mutex mMapMutex;
-    std::atomic_int mRenderInterval; // ms
-    std::map<std::string, RenderResource> mResourceMap;
-    std::chrono::system_clock::time_point mLastRenderTime;
-};
-
 MK_END
+

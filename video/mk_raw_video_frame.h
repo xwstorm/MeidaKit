@@ -4,6 +4,9 @@
 //
 //  Created by xiewei on 2019/11/6.
 //
+
+#pragma once
+
 #include "video_frame.h"
 
 MK_BEGIN

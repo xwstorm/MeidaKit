@@ -11,13 +11,11 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'xiewei' => 'xiew' }
   s.source           = { :git => 'https://github.com/xwstorm/MediaKit.git', :branch => 'master' }
-  s.xcconfig         = {'HEADER_SEARCH_PATHS'  => '"${PODS_ROOT}/../../../" "${PODS_ROOT}/../"', 'GCC_PREPROCESSOR_DEFINITIONS' => 'MK_IOS=1'}
-  s.ios.deployment_target = '9.0'
+  s.xcconfig         = {'HEADER_SEARCH_PATHS'  => '"${PODS_ROOT}/../../../" "${PODS_ROOT}/../MediaKit/sdk" "${PODS_ROOT}/../MediaKit"', 'GCC_PREPROCESSOR_DEFINITIONS' => 'MK_IOS=1'}
+  s.ios.deployment_target = '8.0'
   s.source_files     =  [
-    'base/*.{h,hpp,c,cc,cpp}',
-    'manager/*.{h,hpp,c,cc,cpp}',
-    'video/*.{h,hpp,c,cc,cpp,mm}',
-    'video/ios/*.{h,hpp,c,cc,cpp,mm}',
-    'sdk/*.{h,hpp,c,cc,cpp,mm}'
+    'base/**/*.{h,cpp,mm}',
+    'video/**/*.{h,cpp,mm}',
+    'sdk/**/*.{h,cpp,mm}',
   ]
 end

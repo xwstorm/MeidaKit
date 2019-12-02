@@ -6,13 +6,14 @@
 //
 
 #pragma once
-#include "video/video_render_egl.h"
+#include "video/render_manager_egl.h"
+#include "mk_video_render_program_egl.h"
 
 MK_BEGIN
-class MKVideoRenderEgl : public BVideoRenderEgl {
+class MKEglRenderManager : public BRenderManagerEgl {
 public:
-    MKVideoRenderEgl();
-    ~MKVideoRenderEgl();
+    MKEglRenderManager();
+    ~MKEglRenderManager();
     
     int updateFrame(std::string streamId, CVPixelBufferRef videoFrame);
     

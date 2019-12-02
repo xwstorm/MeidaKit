@@ -8,6 +8,14 @@
 #include "video_frame.h"
 MK_BEGIN
 
+BVideoFrame::~BVideoFrame() {
+    
+}
+
+void BVideoFrame::Release() {
+    delete this;
+}
+
 int BVideoFrame::targetWidth() const {
     if (mTargetWidth == -1) {
         return width();

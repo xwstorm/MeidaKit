@@ -12,8 +12,19 @@ MKCVPixelBuffer::MKCVPixelBuffer() {
     mType = MK_CVPIXEL_FRAME;
 }
 
-int MKCVPixelBuffer::updateBuffer(CVPixelBufferRef buffer) {
-    mCVPixelBuffer = buffer;
+void MKCVPixelBuffer::Release() {
+    if (mCVPixelBuffer) {
+        CVPixelBufferRelease(mCVPixelBuffer);
+    }
+    BVideoFrame::Release();
+}
+
+int MKCVPixelBuffer::updateBuffer(CVPixelBufferRef buffer, int rotation) {
+    if (mCVPixelBuffer) {
+        CVPixelBufferRelease(mCVPixelBuffer);
+    }
+    mCVPixelBuffer = CVPixelBufferRetain(buffer);
+//    mRotation = 0;
     return S_OK;
 }
 
