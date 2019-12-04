@@ -8,6 +8,7 @@
 #pragma once
 #include "base/mk_base.h"
 #include "video/egl_env.h"
+#include "mk_egl_context.h"
 
 MK_BEGIN
 class MKEglEnv : public BEglEnv{

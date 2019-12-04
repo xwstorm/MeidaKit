@@ -35,7 +35,7 @@ void BVideoFrame::setTargetSize(int width, int height) {
     mTargetHeight = height;
 }
 
-MKVideoFrameType BVideoFrame::GetType() {
+MKVideoFrameType BVideoFrame::GetType() const {
     return mType;
 }
 MK_END

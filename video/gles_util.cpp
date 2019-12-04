@@ -45,4 +45,35 @@ uint32_t GLESUtil::CreateShader(uint32_t shaderType, const char** shaderSource) 
     }
     return shader;
 }
+
+bool GLESUtil::CheckGLESErrorCode() {
+    int glErrorCode = glGetError();
+    if (0!= glErrorCode) {
+        assert(false);
+        return false;
+    }
+    return true;
+}
+
+
+unsigned int GLESUtil::CreateDefaultVBO() {
+    const float tx = 1.0f;
+    const float ty = 1.0f;
+    const float vertex[] = {
+        //x   y  x    u v
+        tx, -ty, 0,   1, 0, // 0
+        tx,  ty, 0,   1, 1, // 1
+        -tx, ty, 0,   0, 1, // 2
+
+        -tx, ty, 0,   1, 0, // 2
+        -tx,-ty, 0,   0, 0, // 3
+        tx, -ty, 0,   1, 0, // 0
+    };
+
+    GLuint vertexBuffer = 0;
+    glGenBuffers(1,&vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*5*6, &vertex[0], GL_STATIC_DRAW);
+    return vertexBuffer;
+}
 MK_END

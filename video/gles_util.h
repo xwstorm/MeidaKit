@@ -18,8 +18,10 @@ MK_BEGIN
 
 class GLESUtil {
 public:
-    uint32_t CreateShader(uint32_t shaderType, const char** shaderSource);
-    bool CheckShaderState(int obj);
+    static uint32_t CreateShader(uint32_t shaderType, const char** shaderSource);
+    static bool CheckShaderState(int obj);
+    static bool CheckGLESErrorCode();
+    static unsigned int CreateDefaultVBO();
 };
 
 MK_END

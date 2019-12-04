@@ -51,8 +51,12 @@ void BRenderManagerEgl::close() {
     mRenderThread.close();
 }
 
+VideoRenderEgl* BRenderManagerEgl::CreateVideoRender() {
+    return new VideoRenderEgl();
+}
+
 int BRenderManagerEgl::updateView(std::string streamId, MKView* view) {
-    mRenderThread.Invoke<void>(CALL_FROM_HERE, [this, streamId, view](){
+    int ret = mRenderThread.Invoke<int>(CALL_FROM_HERE, [this, streamId, view](){
         auto it = mResourceMap.find(streamId);
         if (view == nullptr) {
             // clear internal view
@@ -63,14 +67,20 @@ int BRenderManagerEgl::updateView(std::string streamId, MKView* view) {
             VideoRenderEgl* eglRender = nullptr;
             if (it == mResourceMap.end()) {
                 // create new render
-                assert(false);// TODO
+                eglRender = CreateVideoRender();
+                if (!eglRender) {
+                    assert(false);
+                    return S_FAIL;
+                }
+                mResourceMap[streamId] = eglRender;
             } else {
                 eglRender = it->second;
             }
             eglRender->updateView(view);
         }
+        return S_OK;
     });
-    return S_OK;
+    return ret;
 }
 
 int BRenderManagerEgl::updateFrame(std::string streamId, BVideoFrame* videoFrame) {
@@ -79,7 +89,7 @@ int BRenderManagerEgl::updateFrame(std::string streamId, BVideoFrame* videoFrame
     }
     if (videoFrame == nullptr) {
         // clear data
-        mRenderThread.Invoke<void>(CALL_FROM_HERE, [this, streamId](){
+        mRenderThread.Invoke<void>(CALL_FROM_HERE, [this, streamId] () {
             auto it = mResourceMap.find(streamId);
             if (it == mResourceMap.end()) {
                 return;
@@ -92,7 +102,20 @@ int BRenderManagerEgl::updateFrame(std::string streamId, BVideoFrame* videoFrame
         });
     } else {
         mRenderThread.AsyncInvoke<void>(CALL_FROM_HERE, [this, streamId, videoFrame]() {
-            mResourceMap[streamId]->updateFrame(videoFrame);
+            VideoRenderEgl* eglRender = nullptr;
+            auto it = mResourceMap.find(streamId);
+            if (it == mResourceMap.end()) {
+                // create new render
+                eglRender = CreateVideoRender();
+                if (!eglRender) {
+                    assert(false);
+                    return;
+                }
+                mResourceMap[streamId] = eglRender;
+            } else {
+                eglRender = it->second;
+            }
+            eglRender->updateFrame(videoFrame);
         });
     }
     return S_OK;

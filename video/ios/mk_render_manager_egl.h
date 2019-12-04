@@ -20,5 +20,6 @@ public:
     int updateFrame(std::string streamId, BVideoFrame* videoFrame) override;
 protected:
     
+    VideoRenderEgl* CreateVideoRender() override;
 };
 MK_END

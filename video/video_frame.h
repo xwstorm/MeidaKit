@@ -15,6 +15,7 @@ enum MKVideoFrameFormat {
     MK_NV12,
     MK_NV21,
     MK_RGB,
+    MK_BGRA,
 };
 
 enum MKVideoRotation {
@@ -44,7 +45,7 @@ public:
     int targetWidth() const;
     int targetHeight() const;
     
-    MKVideoFrameType GetType();
+    MKVideoFrameType GetType() const;
     
     void setTargetSize(int width, int height);
     

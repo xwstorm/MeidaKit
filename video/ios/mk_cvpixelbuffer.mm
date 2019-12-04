@@ -24,6 +24,20 @@ int MKCVPixelBuffer::updateBuffer(CVPixelBufferRef buffer, int rotation) {
         CVPixelBufferRelease(mCVPixelBuffer);
     }
     mCVPixelBuffer = CVPixelBufferRetain(buffer);
+    OSType type = CVPixelBufferGetPixelFormatType(buffer);
+    switch (type) {
+        case kCVPixelFormatType_420YpCbCr8Planar:
+            break;
+        case kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange:
+        case kCVPixelFormatType_420YpCbCr8BiPlanarFullRange:
+            mFormat = MK_NV12;
+            break;
+        case kCVPixelFormatType_32BGRA:
+            mFormat = MK_BGRA;
+        default:
+            break;
+    }
+    
 //    mRotation = 0;
     return S_OK;
 }

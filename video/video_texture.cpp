@@ -12,7 +12,7 @@ MK_BEGIN
 VideoTexture::VideoTexture() {
     
 }
-int VideoTexture::updateFrame(const BVideoFrame* frame) {
+int VideoTexture::updateFrame(BVideoFrame* frame) {
     switch (mFrameType) {
         case MK_I420: {
             break;

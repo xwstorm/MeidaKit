@@ -13,9 +13,18 @@
 MK_BEGIN
 class MKCVTexture : public VideoTexture {
 public:
+    ~MKCVTexture();
     int updateFrame(CVPixelBufferRef buffer);
+    int updateFrame(BVideoFrame* frame) override;
     
     uint32_t GetTextureId(int index) override;
+protected:
     
+    void DestroyTextureCache();
+    int CreateTextureNV12(CVPixelBufferRef buffer);
+    int CreateTextureBGRA(CVPixelBufferRef buffer);
+    
+    CVOpenGLESTextureCacheRef mCVTextureCache;
+    CVOpenGLESTextureRef      mCVTexture[2];
 };
 MK_END

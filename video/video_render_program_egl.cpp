@@ -34,20 +34,28 @@ const std::string gNV12ToRGBFragmentShader = std::string(
          "yuv.y = yuv.y - 0.5;"
          "yuv.z = yuv.z - 0.5;"
          "rgb = mat3( 1.0,       1.0,         1.0,"
-         "0.0,       -0.343,  1.765,"
-         "1.4,  -0.711,  0.0)  * yuv;"
+             "0.0,       -0.343,  1.765,"
+             "1.4,  -0.711,  0.0)  * yuv;"
+         "gl_FragColor = vec4(rgb.r, rgb.g, rgb.b, alpha);"
     "}");
 
+const std::string gBGRAFragmentShader = std::string(
+                                                    "uniform sampler2D tex;"
+                                                    "varying vec2 fragTexCoord;"
+                                                    "void main() {"
+                                                    "gl_FragColor = texture2D(tex, fragTexCoord);"
+                                                    );
 BVideoRenderProgramEgl::~BVideoRenderProgramEgl() {
     
 }
 
-int BVideoRenderProgramEgl::render(BVideoFrame* frame) {
-    MKVideoFrameFormat format = frame->GetFormat();
+int BVideoRenderProgramEgl::render(VideoTexture* texture) {
+    MKVideoFrameFormat format = texture->GetFormat();
     switch (format) {
         case MK_NV12:
             break;
-            
+        case MK_BGRA:
+            return renderBGRA(texture);
         default:
             break;
     }
@@ -68,7 +76,7 @@ int BVideoRenderProgramEgl::updateTexture(BVideoFrame* frame) {
         case MK_NV21:
             return renderNV12(mTexture);
         case MK_RGB:
-            return renderRGB(mTexture);
+            return renderBGRA(mTexture);
         case MK_I420:
             return renderI420(mTexture);
         default:
@@ -112,7 +120,17 @@ int BVideoRenderProgramEgl::renderI420(VideoTexture* texture) {
     return S_OK;
 }
 
-int BVideoRenderProgramEgl::renderRGB(VideoTexture* texture) {
+int BVideoRenderProgramEgl::renderBGRA(VideoTexture* texture) {
+    if (mBGRAProgram == 0) {
+        int ret = createBGRAProgram();
+        if (ret != S_OK) {
+            return S_FAIL;
+        }
+    }
+    glUseProgram(mBGRAProgram);
+    // render
+    
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     return S_OK;
 }
 
@@ -121,10 +139,30 @@ int BVideoRenderProgramEgl::createNV12Program() {
     
     return S_OK;
 }
+
 int BVideoRenderProgramEgl::createI420Program() {
     return S_OK;
 }
-int BVideoRenderProgramEgl::createRGBProgram() {
+
+int BVideoRenderProgramEgl::createBGRAProgram() {
+    const char* vsSource = gDefaultVertexShader.c_str();
+    GLuint vertexShader = GLESUtil::CreateShader(GL_VERTEX_SHADER, &vsSource);
+    
+    const char* fsSource = gBGRAFragmentShader.c_str();
+    GLuint fragmentShader = GLESUtil::CreateShader(GL_FRAGMENT_SHADER, &fsSource);
+    
+    mBGRAProgram = glCreateProgram();
+    if (!mBGRAProgram) {
+      return S_FAIL;
+    }
+    glAttachShader(mBGRAProgram, vertexShader);
+    glAttachShader(mBGRAProgram, fragmentShader);
+    glLinkProgram(mBGRAProgram);
+    GLESUtil::CheckGLESErrorCode();
+    
+    // create VBO
+    mVBO = GLESUtil::CreateDefaultVBO();
+    GLESUtil::CheckGLESErrorCode();
     return S_OK;
 }
 
@@ -137,7 +175,7 @@ void BVideoRenderProgramEgl::DestroyI420Program() {
     
 }
 
-void BVideoRenderProgramEgl::DestroyRGBProgram() {
+void BVideoRenderProgramEgl::DestroyBGRAProgram() {
     
 }
 

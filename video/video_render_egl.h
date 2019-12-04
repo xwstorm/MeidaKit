@@ -11,6 +11,8 @@
 MK_BEGIN
 class BVideoFrame;
 class MKView;
+class MKEglContext;
+
 class VideoRenderEgl {
 public:
     int Render();
@@ -39,18 +41,19 @@ public:
     inline bool dirty() {
         return mDirty;
     }
-    void resetDirty() {
-        mDirty = false;
-    }
+    virtual VideoTexture* GetFrameTexture();
+    
+    void SetEglContext(MKEglContext* context) {mEglContext = context;};
     
 protected:
     int RenderTexture(VideoTexture* texture);
 public:
-    BVideoRenderProgramEgl* mRenderer = nullptr;
+    BVideoRenderProgramEgl* mRenderProgram = nullptr;
     VideoTexture mTexture;
     
     BVideoFrame* mFrame = nullptr;
     MKView* mView = nullptr;
+    MKEglContext* mEglContext = nullptr;
     bool mDirty = false;
 };
 MK_END

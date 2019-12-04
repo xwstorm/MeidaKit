@@ -9,6 +9,7 @@
 #include "mk_egl_env.h"
 #include "mk_cvpixelbuffer.h"
 #include "mk_video_render_program_egl.h"
+#include "mk_video_render_egl.h"
 MK_BEGIN
 
 MKEglRenderManager::MKEglRenderManager() {
@@ -30,4 +31,11 @@ int MKEglRenderManager::updateFrame(std::string streamId, BVideoFrame* videoFram
     return BRenderManagerEgl::updateFrame(streamId, videoFrame);
 }
 
+VideoRenderEgl* MKEglRenderManager::CreateVideoRender() {
+    VideoRenderEgl* eglRender = new MKVideoRenderEgl();
+    if (mEGLEnv) {
+        eglRender->SetEglContext(mEGLEnv->GetEglContext());
+    }
+    return eglRender;
+}
 MK_END

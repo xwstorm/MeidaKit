@@ -23,11 +23,10 @@ public:
     int updateFrame(std::string streamId, BVideoFrame* videoFrame) override;
     int updateView(std::string streamId, MKView* view);
     void setRenderInterval(int interval);
-    
-//    virtual VideoTexture* GetValidTexture(BVideoFrame);
-    
+        
 protected:
     virtual void render();
+    virtual VideoRenderEgl* CreateVideoRender();
     void postDelayTask();
 protected:
     BEglEnv* mEGLEnv = nullptr;

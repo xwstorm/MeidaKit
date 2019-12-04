@@ -16,9 +16,11 @@ public:
     virtual void close() = 0;
     virtual int bindView(MKView* view) = 0;
     virtual ~BEglEnv() {};
+    MKEglContext* GetEglContext() { return mEglContext;}
     
 protected:
     bool mInitialized = false;
+    MKEglContext* mEglContext = nullptr;
 };
 
 MK_END

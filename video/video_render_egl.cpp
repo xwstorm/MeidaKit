@@ -9,11 +9,21 @@
 MK_BEGIN
 
 int VideoRenderEgl::Render() {
-    return S_OK;
+    VideoTexture* texture = GetFrameTexture();
+    if (texture) {
+        return RenderTexture(texture);
+    }
+    return S_FAIL;
 }
 
+VideoTexture* VideoRenderEgl::GetFrameTexture() {
+    return nullptr;
+}
 
 int VideoRenderEgl::RenderTexture(VideoTexture* texture) {
+    if (mRenderProgram) {
+        mRenderProgram->render(texture);
+    }
     return S_OK;
 }
 

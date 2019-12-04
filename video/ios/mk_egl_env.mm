@@ -6,7 +6,6 @@
 //
 
 #include "video/ios/mk_egl_env.h"
-#include "mk_egl_context.h"
 #include "mk_view.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -44,17 +43,20 @@ int MKEglEnv::open(MKEglContext* sharedContext) {
 void MKEglEnv::close() {
     DestroyRenderBuffer();
     DestroyContext();
-    mGLContext = nil;
+    
 }
 
 int MKEglEnv::initContext(MKEglContext* sharedContext) {
-    assert(mGLContext == nullptr);
-    if (sharedContext == nullptr) {
-        mGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    } else {
-        mGLContext = [[EAGLContext alloc] initWithAPI:[sharedContext->glContext API] sharegroup:[sharedContext->glContext sharegroup]];
+    assert(mEglContext == nullptr);
+    if (mEglContext == nullptr) {
+        mEglContext = new MKEglContext();
     }
-    if (![EAGLContext setCurrentContext:mGLContext]) {
+    if (sharedContext == nullptr) {
+        mEglContext->glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    } else {
+        mEglContext->glContext = [[EAGLContext alloc] initWithAPI:[sharedContext->glContext API] sharegroup:[sharedContext->glContext sharegroup]];
+    }
+    if (![EAGLContext setCurrentContext:mEglContext->glContext]) {
         assert(false);
         close();
         return S_FAIL;
@@ -64,6 +66,10 @@ int MKEglEnv::initContext(MKEglContext* sharedContext) {
 
 void MKEglEnv::DestroyContext() {
     [EAGLContext setCurrentContext:nil];
+    
+    mEglContext->glContext = nil;
+    delete mEglContext;
+    mEglContext = nullptr;
 }
 
 int MKEglEnv::SetupRenderBuffer() {
